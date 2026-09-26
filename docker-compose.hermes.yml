@@ -1,0 +1,47 @@
+name: hermes-hub
+
+services:
+  hermes-hub:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: hermes-hub:1.4
+    container_name: hermes-hub
+    restart: unless-stopped
+    ports:
+      - "${HERMES_PORT:-3457}:3456"
+    environment:
+      PORT: "3456"
+      NODE_ENV: production
+      HOME: /home/bun
+    volumes:
+      - hermes_data:/app/data
+      - /run/media/salahudin/403E3DCC3E3DBBAA/Users/user/github/qualita-odoo:/run/media/salahudin/403E3DCC3E3DBBAA/Users/user/github/qualita-odoo:rw
+    networks:
+      - hermes-net
+    healthcheck:
+      test: ["CMD-SHELL", "bun -e \"fetch('http://localhost:3456/').then(()=>process.exit(0)).catch(()=>process.exit(1))\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  cloudflared-hermes:
+    image: cloudflare/cloudflared:latest
+    container_name: hermes-cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate --protocol http2 --url http://hermes-hub:3456
+    depends_on:
+      hermes-hub:
+        condition: service_started
+    networks:
+      - hermes-net
+
+volumes:
+  hermes_data:
+    name: hermes_hub_data
+
+networks:
+  hermes-net:
+    name: hermes-net
+    driver: bridge

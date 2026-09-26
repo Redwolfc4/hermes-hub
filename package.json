@@ -1,0 +1,14 @@
+{
+  "name": "hermes-hub",
+  "version": "1.0.0",
+  "description": "Hermes Agent Hub + 9Router Comparator + Blue Archive Matrix & Retro Game",
+  "main": "server.ts",
+  "scripts": {
+    "start": "bun run server.ts",
+    "dev": "bun --watch server.ts",
+    "hermes": "bun run src/hermes-cli/index.ts"
+  },
+  "dependencies": {
+    "@types/bun": "latest"
+  }
+}

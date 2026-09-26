@@ -1,0 +1,12 @@
+node_modules
+bun.lockb
+data/*.db-shm
+data/*.db-wal
+data/*.pid
+log
+plans
+server.log
+.git
+.gitignore
+Dockerfile
+docker-compose*.yml
